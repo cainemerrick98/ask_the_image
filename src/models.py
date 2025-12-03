@@ -1,4 +1,6 @@
 from pydantic import BaseModel, ConfigDict
+from enum import Enum
+from typing import Optional
 
 
 class Columns(BaseModel):
@@ -29,10 +31,25 @@ class Schema(BaseModel):
     relationships: list[Relationship]
 
 
+class Operator(Enum):
+    LESS_THAN = '<'
+    GREATER_THAN = '>'
+    EQUAL = '=='
+    NOT_EQUAL = '!='
+    IN = 'IN'
+    NOT_IN = 'NOT IN'
+    IS_NULL = 'IS NULL'
+    IS_NOT_NULL = 'IS NOT NULL'
+
+
 class Filter(BaseModel):
-    columns: str
+    column: str
+    operator: Operator
+    value: int | str | float | None
 
 
 class Query(BaseModel):
-    ...
+    table_name: str
+    columns : list[str]
+    filters : Optional[list[Filter]] 
 
