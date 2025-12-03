@@ -14,6 +14,10 @@ Its obviously not super useful as these things are already pretty easy for a hum
 
 This repo contains the python code to check if the AI models are capable of a task like this. You will be able to talk to the model in the terminal
 
+Its not meant for production so now error handling, type checking etc...
+
+I have implemented some simple tests - more just to make my development process easier more than anything else
+
 ## Future
 
 To turn this into a fully fledged mobile app the logic in this repo would need to refactored into a backend API that could recieve images and transform them into a schema. And a front end for the mobile app would also need to be created.

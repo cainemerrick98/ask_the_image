@@ -1,6 +1,6 @@
 import sqlite3
 from collections import defaultdict
-from .models import Schema, Table
+from .models import Schema, Table, Query
 
 class Database():
     """
@@ -15,9 +15,23 @@ class Database():
     def create_schema(self, schema: Schema):
         for table in schema.tables:
             self._create_table(table)
+    
+        self.conn.commit()
         
         for relationship in schema.relationships:
             self.relationships[relationship.case_table].append(relationship.fact_table)
+
+    def query(self, query: Query) -> list:
+        ...
+
+    def insert_data(self, table_name: str, data: list[list]):
+        self.cursor.execute(
+            f"""
+            INSERT INTO {table_name} VALUES
+            {chr(10).join([",".join(row) for row in data])};
+            """
+        )
+        self.conn.commit()
     
     def _create_table(self, table: Table):
         self.tables.append(table.name)
