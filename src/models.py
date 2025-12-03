@@ -3,13 +3,13 @@ from enum import Enum
 from typing import Optional
 
 
-class Columns(BaseModel):
+class Column(BaseModel):
     name: str
 
 
 class Table(BaseModel):
     name: str
-    columns: list[Columns]
+    columns: list[Column]
 
 
 class Relationship(BaseModel):
