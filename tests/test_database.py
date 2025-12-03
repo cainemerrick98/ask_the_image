@@ -2,6 +2,8 @@ from unittest import TestCase
 from src.database import Database
 from src import models
 
+from fixtures import menu_schema, menu_data
+
 class TestDatabase(TestCase):
     def setUp(self):
         self.database = Database()
@@ -11,9 +13,9 @@ class TestDatabase(TestCase):
 
     def test_create_schema(self):
         columns = [
-            models.Columns(name='Column1'),
-            models.Columns(name='Column2'),
-            models.Columns(name='Column3')
+            models.Column(name='Column1'),
+            models.Column(name='Column2'),
+            models.Column(name='Column3')
         ]
         table_1 = models.Table(
             name='Table1',
@@ -33,3 +35,6 @@ class TestDatabase(TestCase):
             []
         )
 
+    def test_insert_data_to_schema(self):
+        self.database.create_schema(menu_schema)
+        self.database.insert_data()

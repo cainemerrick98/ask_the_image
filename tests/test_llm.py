@@ -5,7 +5,11 @@ from unittest import TestCase
 
 from src.llm import LLM
 from src.utils import encode_image_to_base64
-from src.models import Schema, Table, Column
+from src.models import Schema
+
+from .fixtures import menu_schema
+
+
 
 load_dotenv()
 
@@ -24,18 +28,6 @@ class TestLLM(TestCase):
         self.assertIsInstance(menu_schema, Schema)
     
     def test_extract_data(self):
-        menu_schema = Schema(
-            tables=[
-                Table(name='menu_items', columns=[
-                    Column(name='category'), 
-                    Column(name='item'), 
-                    Column(name='solo_price'), 
-                    Column(name='meal_price')
-                    ]
-                )
-            ], 
-            relationships=None
-        )
         data = self.llm.extract_data_for_schema(menu_schema, self.menu_image_url)
         
         # If this is successful we're good
