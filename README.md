@@ -14,7 +14,7 @@ Its obviously not super useful as these things are already pretty easy for a hum
 
 This repo contains the python code to check if the AI models are capable of a task like this. You will be able to talk to the model in the terminal
 
-Its not meant for production so now error handling, type checking etc...
+Its not meant for production so no error handling, type checking, edge cases etc...
 
 I have implemented some simple tests - more just to make my development process easier more than anything else
 
