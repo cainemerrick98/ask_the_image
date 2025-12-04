@@ -38,9 +38,8 @@ class TestDatabase(TestCase):
     def test_insert_data_to_schema(self):
         self.database.create_schema(menu_schema)
         table = menu_schema.tables[0]
-        database_data =  [[row[column.name] or 'Null' for column in table.columns] for row in menu_data['tables'][0]['columns']]
-        print(database_data)
+        database_data =  [[row[column.name] for column in table.columns] for row in menu_data['tables'][0]['columns']]
         self.database.insert_data(table.name, database_data)
 
-        max_price = self.database.conn.execute('SELECT MAX(solo_price) FROM menu_items').fetchone()
+        max_price = self.database.conn.execute('SELECT MAX(solo_price) FROM menu_items').fetchone()[0]
         self.assertEqual(max_price, 5.99)
