@@ -2,9 +2,16 @@ from pydantic import BaseModel, ConfigDict, Field
 from enum import Enum
 from typing import Optional
 
+# TODO Dates and times need to also be added here
+class DataTypes(Enum):
+    FLOAT = 'float'
+    INTEGER = 'integer'
+    STRING = 'string'
+
 
 class Column(BaseModel):
     name: str
+    data_type: DataTypes
 
 
 class Table(BaseModel):

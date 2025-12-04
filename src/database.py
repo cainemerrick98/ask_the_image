@@ -25,12 +25,14 @@ class Database():
         ...
 
     def insert_data(self, table_name: str, data: list[list]):
-        self.cursor.execute(
-            f"""
-            INSERT INTO {table_name} VALUES
-            {chr(10).join([",".join(row) for row in data])};
-            """
-        )
+        num_cols = len(data[0])
+        placeholders = "(" + ",".join(["?"] * num_cols) + ")"
+        insert = f"INSERT INTO {table_name} VALUES {','.join([placeholders] * len(data))}"
+
+        # Flatten the list of lists into a single tuple for executemany-style params
+        params = [item for row in data for item in row]
+
+        self.cursor.execute(insert, params)
         self.conn.commit()
     
     def _create_table(self, table: Table):

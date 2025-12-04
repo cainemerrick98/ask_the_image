@@ -9,8 +9,7 @@ menu_schema = Schema(
             Column(name='meal_price')
             ]
             )
-        ], 
-    relationships=None
+        ]
 )
 
 menu_data = {'tables': [

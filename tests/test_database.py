@@ -2,7 +2,7 @@ from unittest import TestCase
 from src.database import Database
 from src import models
 
-from fixtures import menu_schema, menu_data
+from .fixtures import menu_schema, menu_data
 
 class TestDatabase(TestCase):
     def setUp(self):
@@ -37,4 +37,10 @@ class TestDatabase(TestCase):
 
     def test_insert_data_to_schema(self):
         self.database.create_schema(menu_schema)
-        self.database.insert_data()
+        table = menu_schema.tables[0]
+        database_data =  [[row[column.name] or 'Null' for column in table.columns] for row in menu_data['tables'][0]['columns']]
+        print(database_data)
+        self.database.insert_data(table.name, database_data)
+
+        max_price = self.database.conn.execute('SELECT MAX(solo_price) FROM menu_items').fetchone()
+        self.assertEqual(max_price, 5.99)
