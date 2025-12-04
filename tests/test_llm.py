@@ -32,5 +32,5 @@ class TestLLM(TestCase):
         
         # If this is successful we're good
         data = json.loads(data)
-        
+        print(data)
         

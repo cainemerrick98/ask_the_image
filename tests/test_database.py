@@ -13,9 +13,9 @@ class TestDatabase(TestCase):
 
     def test_create_schema(self):
         columns = [
-            models.Column(name='Column1'),
-            models.Column(name='Column2'),
-            models.Column(name='Column3')
+            models.Column(name='Column1', data_type='string'),
+            models.Column(name='Column2', data_type='string'),
+            models.Column(name='Column3', data_type='string')
         ]
         table_1 = models.Table(
             name='Table1',
