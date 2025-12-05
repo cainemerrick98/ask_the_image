@@ -49,7 +49,7 @@ class Operator(Enum):
 
 class Sorting(Enum):
     ASC = 'ASC'
-    DES = 'DES'
+    DESC = 'DESC'
 
 
 class Aggregation(Enum):
@@ -60,10 +60,12 @@ class Aggregation(Enum):
 class Filter(BaseModel):
     column: str
     operator: Operator
-    value: int | str | float | None
+    value: int | str | float | None #TODO Handle value is query
 
     def to_string(self):
         if self.value is not None:
+            if isinstance(self.value, str):
+                return f"{self.column} {self.operator.value} \"{self.value}\""    
             return f"{self.column} {self.operator.value} {self.value}"
         else:
             return f"{self.column} {self.operator.value}"
@@ -72,9 +74,15 @@ class OrderBy(BaseModel):
     column: str
     sorting: Sorting
 
+    def to_string(self):
+        return f"{self.column} {self.sorting.value}"
+
 
 class GroupBy(BaseModel):
     column: str
+
+    def to_string(self):
+        return self.column
 
 
 class QueryColumn(BaseModel):
@@ -102,14 +110,14 @@ class Query(BaseModel):
 
     def to_string(self):
         query_string = f"""
-        SELECT {",".join([col.to_string() for col in self.columns])}
+        SELECT {','.join([col.to_string() for col in self.columns])}
         FROM {self.table_name}
         """
         if self.filters:
             query_string += f"WHERE {' AND '.join([f.to_string() for f in self.filters])}\n"
         if self.groupby:
-            ...
+            query_string += f"GROUP BY {','.join([g.to_string() for g in self.groupby])}\n"
         if self.orderby:
-            ...
+            query_string += f"ORDER BY {','.join([o.to_string() for o in self.orderby])}\n"
 
         return query_string
