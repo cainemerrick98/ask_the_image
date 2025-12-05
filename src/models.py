@@ -39,7 +39,7 @@ class Schema(BaseModel):
 class Operator(Enum):
     LESS_THAN = '<'
     GREATER_THAN = '>'
-    EQUAL = '=='
+    EQUAL = '='
     NOT_EQUAL = '!='
     IN = 'IN'
     NOT_IN = 'NOT IN'
@@ -47,14 +47,69 @@ class Operator(Enum):
     IS_NOT_NULL = 'IS NOT NULL'
 
 
+class Sorting(Enum):
+    ASC = 'ASC'
+    DES = 'DES'
+
+
+class Aggregation(Enum):
+    SUM = 'SUM'
+    MAX = 'MAX'
+    MIN = 'MIN'
+
 class Filter(BaseModel):
     column: str
     operator: Operator
     value: int | str | float | None
 
+    def to_string(self):
+        if self.value is not None:
+            return f"{self.column} {self.operator.value} {self.value}"
+        else:
+            return f"{self.column} {self.operator.value}"
 
+class OrderBy(BaseModel):
+    column: str
+    sorting: Sorting
+
+
+class GroupBy(BaseModel):
+    column: str
+
+
+class QueryColumn(BaseModel):
+    name: str
+    aggregation: Optional[Aggregation] = None
+
+    def to_string(self):
+        if self.aggregation:
+            return f"{self.aggregation.value}({self.name})"
+        return self.name
+
+
+
+#TODO: how to specify that filters can be joined with and/or?
+# At the moment lets just handle with AND
+#TODO: how do we handle columns which are a combination of two others 
+# e.g. subtraction or concatentation
+#TODO: add joins
 class Query(BaseModel):
     table_name: str
-    columns : list[str]
-    filters : Optional[list[Filter]] 
+    columns: list[QueryColumn]
+    filters: Optional[list[Filter]] = None
+    groupby: Optional[list[GroupBy]] = None
+    orderby: Optional[list[OrderBy]] = None
 
+    def to_string(self):
+        query_string = f"""
+        SELECT {",".join([col.to_string() for col in self.columns])}
+        FROM {self.table_name}
+        """
+        if self.filters:
+            query_string += f"WHERE {' AND '.join([f.to_string() for f in self.filters])}\n"
+        if self.groupby:
+            ...
+        if self.orderby:
+            ...
+
+        return query_string

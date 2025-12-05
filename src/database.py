@@ -22,7 +22,9 @@ class Database():
             self.relationships[relationship.case_table].append(relationship.fact_table)
 
     def query(self, query: Query) -> list:
-        ...
+        result = self.conn.execute(query.to_string()).fetchall()
+        return result
+
 
     def insert_data(self, table_name: str, data: list[list]):
         num_cols = len(data[0])
