@@ -45,6 +45,7 @@ class Operator(Enum):
     NOT_IN = 'NOT IN'
     IS_NULL = 'IS NULL'
     IS_NOT_NULL = 'IS NOT NULL'
+    LIKE = 'LIKE'
 
 
 class Sorting(Enum):
@@ -57,10 +58,11 @@ class Aggregation(Enum):
     MAX = 'MAX'
     MIN = 'MIN'
 
+
 class Filter(BaseModel):
     column: str
     operator: Operator
-    value: int | str | float | None #TODO Handle value is query
+    value: int | str | float | None = None #TODO Handle value is query
 
     def to_string(self):
         if self.value is not None:
@@ -69,6 +71,19 @@ class Filter(BaseModel):
             return f"{self.column} {self.operator.value} {self.value}"
         else:
             return f"{self.column} {self.operator.value}"
+
+
+class OR(BaseModel):
+    filters: list[Filter]
+
+    def to_string(self):
+        return "(" + " OR ".join([f.to_string() for f in self.filters]) + ")"
+
+class AND(BaseModel):
+    filters: list[Filter]
+
+    def to_string(self):
+        return "(" + " AND ".join([f.to_string() for f in self.filters]) + ")"
 
 class OrderBy(BaseModel):
     column: str
@@ -95,16 +110,20 @@ class QueryColumn(BaseModel):
         return self.name
 
 
-
-#TODO: how to specify that filters can be joined with and/or?
-# At the moment lets just handle with AND
 #TODO: how do we handle columns which are a combination of two others 
 # e.g. subtraction or concatentation
 #TODO: add joins
 class Query(BaseModel):
+    model_config = ConfigDict(
+        json_schema_extra={
+            "title": "Query",
+            "description":"Represent a SQL query. Note that filter and OR clauses are joined with an AND condition"
+                          "If using the LIKE operator surround the filter value with %"
+        }
+    )
     table_name: str
     columns: list[QueryColumn]
-    filters: Optional[list[Filter]] = None
+    filters: Optional[list[Filter | OR]] = None
     groupby: Optional[list[GroupBy]] = None
     orderby: Optional[list[OrderBy]] = None
 

@@ -9,7 +9,8 @@ from src.models import (
     OrderBy, 
     Operator,
     Aggregation,
-    Sorting
+    Sorting,
+    OR
 )
 
 from .fixtures import menu_schema, menu_data
@@ -105,3 +106,30 @@ class TestDatabase(TestCase):
         )
         result = self.database.query(most_expensive_breakfast_item)
         self.assertEqual(result[0], ('BIG BREAKFAST® WITH HOTCAKES', 5.49))
+
+        most_expensive_quarter_or_double = Query(
+            table_name='menu_items',
+            columns=[
+                QueryColumn(name='item'),
+            ],
+            filters=[
+                OR(filters=[
+                    Filter(
+                        column='item',
+                        operator=Operator.LIKE,
+                        value='%QUARTER%'
+                    ),
+                    Filter(
+                        column='item',
+                        operator=Operator.LIKE,
+                        value='%DOUBLE%'
+                    )
+                ])    
+            ],
+            orderby=[
+                OrderBy(column='solo_price', sorting=Sorting.DESC)
+            ]
+        )
+
+        result = self.database.query(most_expensive_quarter_or_double)
+        self.assertEqual(result[0][0], 'QUARTER POUNDER® WITH CHEESE BACON')

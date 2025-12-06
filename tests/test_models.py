@@ -3,6 +3,7 @@ from src.models import (
     Query, 
     QueryColumn, 
     Filter, 
+    OR,
     GroupBy, 
     OrderBy, 
     Operator,
@@ -93,6 +94,28 @@ class TestModels(TestCase):
             orderby=[
                 OrderBy(column='Col1', sorting=Sorting.ASC), 
                 OrderBy(column='Col2', sorting=Sorting.DESC)
+            ]
+        )
+        self.assertEqual(normalize_sql(expected_result), normalize_sql(query.to_string()))
+
+    
+    def test_build_query_with_or_condition(self):
+        expected_result = """
+        SELECT Col1 
+        FROM Table1
+        WHERE (Col2 > 10 OR Col3 > 10) AND Col4 IS NOT NULL
+        """
+        query = Query(
+            table_name='Table1',
+            columns=[
+                QueryColumn(name='Col1')
+            ],
+            filters=[
+                OR(filters=[
+                    Filter(column='Col2', operator=Operator.GREATER_THAN, value=10),
+                    Filter(column='Col3', operator=Operator.GREATER_THAN, value=10)
+                ]),
+                Filter(column='Col4', operator=Operator.IS_NOT_NULL)
             ]
         )
         self.assertEqual(normalize_sql(expected_result), normalize_sql(query.to_string()))
