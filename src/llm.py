@@ -39,5 +39,12 @@ class LLM():
             ]
         ).output[0].content[0].text
 
-    def create_query(self, user_query: str, database: Database) -> Query:
-        ...
+    def create_query(self, user_query: str, schema: Schema) -> Query:
+        return self.client.responses.create(
+            model='gpt-4.1',
+            input=[
+                {
+                    'role': 'user',
+                }
+            ]
+        )

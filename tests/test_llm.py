@@ -33,4 +33,6 @@ class TestLLM(TestCase):
         # If this is successful we're good
         data = json.loads(data)
         print(data)
-        
+    
+    def test_create_simple_query(self):
+        ...
