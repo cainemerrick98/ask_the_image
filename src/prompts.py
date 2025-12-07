@@ -65,3 +65,17 @@ database schema:
 ________________
 {schema}
 """
+
+CREATE_ANSWER_TO_RESPOND_TO_USER = """
+Your job is to create a asnwer to a user query.
+
+Below you are provided with the user's query and the database query result that contains the data that can answer the query
+
+user query:
+___________
+{user_query}
+
+database query result:
+________________
+{query_result}
+"""

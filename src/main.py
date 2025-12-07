@@ -1,6 +1,6 @@
-from llm import LLM
-from database import Database
-from utils import encode_image_to_base64
+from .llm import LLM
+from .database import Database
+from .utils import encode_image_to_base64
 
 from dotenv import load_dotenv
 import os
@@ -54,3 +54,7 @@ def main():
         
 
 
+if __name__ == '__main__':
+    main()
+
+    

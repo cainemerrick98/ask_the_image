@@ -1,7 +1,7 @@
 from openai import OpenAI
-from .prompts import CREATE_SCHEMA, EXTRACT_DATA_FOR_SCHEMA, CREATE_QUERY_TO_RESPOND_TO_USER
+from .prompts import CREATE_SCHEMA, EXTRACT_DATA_FOR_SCHEMA, CREATE_QUERY_TO_RESPOND_TO_USER, CREATE_ANSWER_TO_RESPOND_TO_USER
 from .models import Schema, Query
-from .database import Database
+from tabulate import tabulate
 
 # TODO: In the init create a conversation object and then the LLM always has all the context from the create schema
 # to the creation of different queries
@@ -40,11 +40,35 @@ class LLM():
         ).output[0].content[0].text
 
     def create_query(self, user_query: str, schema: Schema) -> Query:
+        return self.client.responses.parse(
+            model='gpt-4.1',
+            input=[
+                {
+                    'role': 'user',
+                    'content':[
+                        {'type': 'input_text', 'text': CREATE_QUERY_TO_RESPOND_TO_USER.format(
+                            user_query=user_query, schema=schema.model_dump_json()
+                        )}
+                    ]
+                }
+            ],
+            text_format=Query
+        ).output_parsed
+    
+    def answer(self, user_query: str, query_result: list[tuple], query:Query) -> str:
+        
+        query_result_pretty = tabulate(query_result, [col.name for col in query.columns], tablefmt='pretty')
+
         return self.client.responses.create(
             model='gpt-4.1',
             input=[
                 {
                     'role': 'user',
+                    'content':[
+                        {'type': 'input_text', 'text': CREATE_ANSWER_TO_RESPOND_TO_USER.format(
+                            user_query=user_query, query_result=query_result_pretty
+                        )},
+                    ]
                 }
             ]
-        )
+        ).output[0].content[0].text

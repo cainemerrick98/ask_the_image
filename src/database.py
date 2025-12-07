@@ -18,7 +18,7 @@ class Database():
     
         self.conn.commit()
         
-        for relationship in schema.relationships:
+        for relationship in schema.relationships or []:
             self.relationships[relationship.case_table].append(relationship.fact_table)
 
     def query(self, query: Query) -> list:

@@ -32,7 +32,8 @@ class TestLLM(TestCase):
         
         # If this is successful we're good
         data = json.loads(data)
-        print(data)
     
     def test_create_simple_query(self):
-        ...
+        user_query = 'What is the most expensive solo priced item on the menu'
+        sql_query = self.llm.create_query(user_query, menu_schema)
+        print(sql_query)
