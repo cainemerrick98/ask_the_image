@@ -25,6 +25,7 @@ def main():
     
     print('Creating schema for image data...')
     schema = model.create_schema(image_url)
+    print(f'Heres the schema I came up with {schema.model_dump_json()}')
     database.create_schema(schema)
     print('Schema successfully created!')
 
@@ -35,6 +36,10 @@ def main():
         table_schema = [t for t in schema.tables if t.name == table_name][0]
         table_data = [[row[column.name] for column in table_schema.columns] 
                       for row in table_data['columns']]
+        database.insert_data(table_name, table_data)
+    
+    print(len(database.conn.execute(f'SELECT * FROM {table_name}').fetchall()))
+        
     print('Data loaded')
 
     print('I am ready to answer any question about the data in the image. To exit just type exit')
@@ -44,6 +49,7 @@ def main():
             break
         
         sql_query = model.create_query(user_query, schema)
+        print(sql_query)
         query_result = database.query(sql_query)
         answer = model.answer(user_query, query_result, sql_query)
         print('Query Result:')

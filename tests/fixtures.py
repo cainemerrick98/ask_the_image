@@ -49,3 +49,6 @@ menu_data = {'tables': [
     }], 
     'relationships': []
 }
+
+table = menu_schema.tables[0]
+menu_data_database =  [[row[column.name] for column in table.columns] for row in menu_data['tables'][0]['columns']]

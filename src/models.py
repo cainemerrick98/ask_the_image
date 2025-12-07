@@ -67,7 +67,7 @@ class Filter(BaseModel):
     def to_string(self):
         if self.value is not None:
             if isinstance(self.value, str):
-                return f"{self.column} {self.operator.value} \"{self.value}\""    
+                return f"LOWER({self.column}) {self.operator.value} \"{self.value.lower()}\""    
             return f"{self.column} {self.operator.value} {self.value}"
         else:
             return f"{self.column} {self.operator.value}"

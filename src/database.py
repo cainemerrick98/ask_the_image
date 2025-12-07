@@ -11,7 +11,7 @@ class Database():
         self.cursor = self.conn.cursor()
         self.tables = []
         self.relationships = defaultdict(list)
-
+        
     def create_schema(self, schema: Schema):
         for table in schema.tables:
             self._create_table(table)
