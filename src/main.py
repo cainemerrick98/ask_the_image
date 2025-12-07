@@ -45,7 +45,7 @@ def main():
         
         sql_query = model.create_query(user_query, schema)
         query_result = database.query(sql_query)
-        answer = model.answer(user_query, query_result)
+        answer = model.answer(user_query, query_result, sql_query)
         print('Query Result:')
         print(tabulate(query_result, [col.name for col in sql_query.columns], tablefmt='pretty'))
         print('Answer')
