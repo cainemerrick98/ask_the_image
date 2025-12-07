@@ -21,3 +21,17 @@ I have implemented some simple tests - more just to make my development process 
 ## Future
 
 To turn this into a fully fledged mobile app the logic in this repo would need to refactored into a backend API that could recieve images and transform them into a schema. And a front end for the mobile app would also need to be created.
+
+
+# Examples
+Heres the image ingested
+![alt text](tests/test_images/mcdonalds_menu.jpg)
+
+And here is the convo
+![alt text](tests/test_results/setup_result.png)
+![alt text](tests/test_results/first_question.png)
+![alt text](tests/test_results/most_expensive.png)
+![alt text](tests/test_results/cheeseburger_price.png)
+### This ones incorrect it should have used OR()
+![alt text](<tests/test_results/using or incorrectly.png>)
+![alt text](<tests/test_results/favourite item.png>)

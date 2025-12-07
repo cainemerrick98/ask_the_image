@@ -57,6 +57,7 @@ class Aggregation(Enum):
     SUM = 'SUM'
     MAX = 'MAX'
     MIN = 'MIN'
+    COUNT = 'COUNT'
 
 
 class Filter(BaseModel):
